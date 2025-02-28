@@ -1,24 +1,18 @@
+from constants import button_selected_texture, button_texture, exit_handler, FPS
 from helper import Counter
-from typing import NoReturn, Tuple
+
+from typing import Tuple
 from game_state.errors import ExitGame, ExitState
 from game_state import StateManager, State
 
 import pygame
 
-FPS = 60
-button_texture = pygame.image.load('save-button.png') # create a texture manager? is it worth it?
-
-def exit_handler(event) -> NoReturn:
-    if event.type == pygame.QUIT:
-        raise ExitGame()
-
 ###
-ColorLike = any
-
 
 class Button:
     """ A simple button class. """
     image = button_texture
+    image_selected = button_selected_texture
     def __init__(self, pos: Tuple[int, int]):
         self.x, self.y = pos
         self.rect = self.image.get_rect()
@@ -27,10 +21,8 @@ class Button:
     def draw(self, window, *, selected: bool = False):
         """ draw button """
         if selected:
-            outline_image = pygame.Surface((self.rect.width + 4, self.rect.height + 4))
-            outline_image.fill((255, 255, 255))  # Fill with white color for outline
-            outline_rect = outline_image.get_rect(center=self.rect.center)
-            window.blit(outline_image, outline_rect)
+            window.blit(self.image_selected, self.rect)
+            return
         window.blit(self.image, self.rect)
 
 class MainMenu(State):
@@ -49,7 +41,6 @@ class MainMenu(State):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    print("keydown event", event.key)
                     match (event.key):
                         case pygame.K_c:
                             self.manager.change_state(
@@ -60,10 +51,12 @@ class MainMenu(State):
                             self.current_selection += 1
                         case pygame.K_UP:
                             self.current_selection -= 1
+                        case pygame.K_RETURN:
+                            print("enter been pressed for button", self.current_selection)
                 exit_handler(event)
             self.window.fill((124, 240, 0))
             self.draw_buttons()
-            pygame.display.update()
+            pygame.display.flip()
             self.clock.tick(FPS)
 
 
