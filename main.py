@@ -36,9 +36,9 @@ class Button:
 class MainMenu(State):
     """ main menu select what save to edit """
     current_selection = Counter(0, 0, 2)
-    buttons = [Button((5, 100)),
-                    Button((5, 200)),
-                    Button((5, 300))]
+    buttons = [ Button((5, 100)),
+                Button((5, 200)),
+                Button((5, 300))]
 
     def draw_buttons(self):
         """ Draws the buttons. """
@@ -49,7 +49,7 @@ class MainMenu(State):
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
-                    event.key ==
+                    print("keydown event", event.key)
                     match (event.key):
                         case pygame.K_c:
                             self.manager.change_state(
@@ -60,7 +60,6 @@ class MainMenu(State):
                             self.current_selection += 1
                         case pygame.K_UP:
                             self.current_selection -= 1
-
                 exit_handler(event)
             self.window.fill((124, 240, 0))
             self.draw_buttons()

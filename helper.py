@@ -1,6 +1,6 @@
+from typing import Union
 
-
-class Counter(int):
+class Counter:
     def __init__(self, value: int, min_val: int, max_val: int, *, strict: bool = False):
         self._min = min_val
         self._max = max_val
@@ -14,7 +14,10 @@ class Counter(int):
                 # Fix the value by clamping it
                 value = min(max(value, min_val), max_val)
 
-        super().__init__(value)  # Initialize int base class
+        self.value = value
+    
+    def __int__(self):
+        return self.value
 
     def __add__(self, other: int) -> 'Counter':
         result_value = int(self) + other
@@ -43,3 +46,6 @@ class Counter(int):
     def __repr__(self) -> str:
         mode = "strict" if self.strict else "non-strict"
         return f"Counter(value={int(self)}, bounds=[{self._min}, {self._max}], mode='{mode}')"
+
+    def __eq__(self, other: Union[int,'Counter']):
+        return int(other) == int(self)
