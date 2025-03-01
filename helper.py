@@ -1,3 +1,4 @@
+"""Helper classes for the editor"""
 from typing import Union
 
 class Counter:
@@ -20,7 +21,7 @@ class Counter:
                 value = min(max(value, min_val), max_val)
 
         self.value = value
-    
+
     def __int__(self):
         return self.value
 
@@ -33,12 +34,12 @@ class Counter:
             else:
                 # Fix the value by clamping it
                 result_value = min(max(result_value, self._min), self._max)
-        
+
         return Counter(result_value, self._min, self._max, strict=self.strict)
 
     def __sub__(self, other: int) -> 'Counter':
         result_value = int(self) - other
-        
+
         if not self._min <= result_value <= self._max:
             if self.strict:
                 raise ValueError(f"Result {result_value} must be between {self._min} and {self._max}")
@@ -56,6 +57,21 @@ class Counter:
         return int(other) == int(self)
 
 class AttrDict(dict):
+    """
+    A dict subclass that allows attribute access like an object.
+
+    Instead of dict[key], you can use dict.key.
+
+    This is useful when you want to use a dict as a simple dataclass, but
+    you can still use it as a dict if you need to.
+
+    Example:
+
+        attr_dict = AttrDict()
+        attr_dict.foo = 'bar'
+        print(attr_dict.foo)  # prints 'bar'
+        print(attr_dict['foo'])  # prints 'bar'
+    """
     def __getattr__(self, attr):
         try:
             return self[attr]
@@ -73,7 +89,6 @@ class AttrDict(dict):
 
     def __dir__(self):
         return list(self) + dir(type(self))
-    
+
     def __repr__(self):
         return f"AttrDict({dict.__repr__(self)})"
-

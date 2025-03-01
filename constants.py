@@ -3,7 +3,6 @@ Constants used globally in the editor.
 """
 import pygame
 
-from typing import Optional, Union
 from game_state.errors import ExitGame
 from states import State
 

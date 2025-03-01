@@ -14,7 +14,7 @@ class TVector2(tuple):
     def y(self):
         """ y component of the vector """
         return self[1]
-    
+
     def __repr__(self):
         return f"TVector2(x={self.x}, y={self.y})"
 
@@ -68,8 +68,11 @@ def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None)
 def get_surface_hotspot(surface: pygame.Surface) -> Optional[TVector2]:
     """ get the hotspot of a surface """
     return _textures_hotspot_table.get(surface)
-
 def draw_background(window, image):
+    """
+    Draws a background image with a hotspot.
+    The image is placed such that the position is at (0, 0) in the window.
+    """
     hotspot = get_surface_hotspot(image)
     window.blit(image, (-hotspot.x, -hotspot.y))
 
@@ -81,7 +84,6 @@ class Textures: # create a texture manager? is it worth it?
     background = load_image('textures/background.png')
 
 
-# TODO: remove _circle_cache, also, try and understand how this code works
 @lru_cache
 def _circlepoints(r):
     x, y, e = r, 0, 1 - r
@@ -120,4 +122,3 @@ def render_text_with_outline(text: str, font: pygame.Font, gfcolor=pygame.Color(
 
     surf.blit(textsurface, (opx, opx))
     return surf
-
