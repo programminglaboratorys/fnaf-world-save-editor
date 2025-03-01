@@ -1,4 +1,6 @@
 from typing import Union
+from functools import lru_cache
+import pygame
 
 class Counter:
     """Class to create a counter with a defined range. The counter can
@@ -76,3 +78,45 @@ class AttrDict(dict):
     
     def __repr__(self):
         return f"AttrDict({dict.__repr__(self)})"
+
+
+
+# TODO: remove _circle_cache, also, try and understand how this code works
+@lru_cache
+def _circlepoints(r):
+    x, y, e = r, 0, 1 - r
+    points = []
+    while x >= y:
+        points.append((x, y))
+        y += 1
+        if e < 0:
+            e += 2 * y - 1
+        else:
+            x -= 1
+            e += 2 * (y - x) - 1
+    points += [(y, x) for x, y in points if x > y]
+    points += [(-x, y) for x, y in points if x]
+    points += [(x, -y) for x, y in points if y]
+    points.sort()
+    return points
+
+def render_text_with_outline(text: str, font: pygame.Font, gfcolor=pygame.Color('dodgerblue'), ocolor=(0, 0, 0), opx=2):
+    """
+    Render text with an outline
+    """
+    textsurface = font.render(text, True, gfcolor).convert_alpha()
+    w = textsurface.get_width() + 2 * opx
+    h = font.get_height()
+
+    osurf = pygame.Surface((w, h + 2 * opx)).convert_alpha()
+    osurf.fill((0, 0, 0, 0))
+
+    surf = osurf.copy()
+
+    osurf.blit(font.render(text, True, ocolor).convert_alpha(), (0, 0))
+
+    for dx, dy in _circlepoints(int(round(opx))):
+        surf.blit(osurf, (dx + opx, dy + opx))
+
+    surf.blit(textsurface, (opx, opx))
+    return surf
