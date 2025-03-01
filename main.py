@@ -1,56 +1,47 @@
 """ main functionality of the editor """
 import pygame
 
-from constants import Textures, global_event_handler, FPS, WINDOW_SIZE
-from editor import Editor
-from helper import Counter, AttrDict
-from states import State, MainEditorStateManager
-
 from typing import Tuple
 from game_state.errors import ExitGame, ExitState
+
+from constants import Textures, global_event_handler, FPS, WINDOW_SIZE, get_surface_hotspot
+from editor import Editor
+from helper import Counter
+from states import State, MainEditorStateManager
 
 
 ###
 
-class Button:
+class SlotButton:
     """ A simple button class. """
     image = Textures.button # center (244, 60)
     image_selected = Textures.button_selected
-    def __init__(self, pos: Tuple[int, int]):
-        self.x, self.y = pos
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = pos
 
-    def draw(self, window, *, selected: bool = False):
-        """ draw button """
-        if selected:
-            window.blit(self.image_selected, self.rect)
-            return
-        window.blit(self.image, self.rect)
+    @classmethod
+    def get_texture(cls, selected: bool):
+        """ get the texture of the button based on if the button is selected or not """
+        return cls.image_selected if selected else cls.image
 
-    def change_pos(self, pos: Tuple[int, int]):
-        """ change the position of the button """
-        self.x, self.y = pos
-        self.rect.x, self.rect.y = pos
+    @classmethod
+    def draw_button_center(cls, window, index: int, selected: bool):
+        """ draw button in the center """
+        texture = cls.get_texture(selected)
+        hotspot = get_surface_hotspot(texture)
+        rect = texture.get_rect()
+        button_centerx = window.get_rect().centerx - hotspot.x
+        button_centery = (window.get_rect().centery - 200) + 100 * index
+        rect.x, rect.y = button_centerx, button_centery
+        window.blit(texture, rect)
 
 class MainMenu(State):
     """ main menu select what save to edit """
-    current_selection = Counter(0, 0, 2)
-    buttons = [ Button((5, 100)),
-                Button((5, 200)),
-                Button((5, 300))]
+    buttons = [SlotButton, SlotButton, SlotButton]
+    current_selection = Counter(0, 0, len(buttons)-1)
 
     def draw_buttons(self):
         """ Draws the buttons. """
         for index, button in enumerate(self.buttons):
-            button_centerx = self.window.get_rect().centerx - 244
-            button_centery = self.window.get_rect().centery - (index * 100)
-            #print(index,  150 - 60 + (index * 100))
-            #print(index, self.window.get_rect().centery, button_centery)
-            button.change_pos((button_centerx, button_centery))
-            button.draw(self.window, selected = index == self.current_selection)
-
-
+            button.draw_button_center(self.window, index, index == self.current_selection)
 
     def run(self) -> None:
         while True:
@@ -73,6 +64,7 @@ class MainMenu(State):
 
 
 def main() -> None:
+    """ main function holds the main loop of the editor """
     screen = pygame.display.set_mode(WINDOW_SIZE, pygame.RESIZABLE)
     # Create a basic 500x700 pixel window
 
