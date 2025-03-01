@@ -1,14 +1,13 @@
 """ main functionality of the editor """
-import pygame
-pygame.init()
-
-from typing import Tuple
 from game_state.errors import ExitGame, ExitState
+import pygame
 
-from constants import Textures, global_event_handler, FPS, WINDOW_SIZE, get_surface_hotspot
-from editor import Editor
-from helper import Counter, render_text_with_outline
+from constants import  global_event_handler, FPS, WINDOW_SIZE
+from textures import Textures, draw_background, render_text_with_outline
+from helper import Counter
 from states import State, MainEditorStateManager
+from editor import Editor
+
 
 
 ###
@@ -47,13 +46,9 @@ class SlotButton:
                                               centery=self.y + texture.get_height() // 2)
             window.blit(text_surface, text_rect)
 
-
-def draw_background(window, image):
-    hotspot = get_surface_hotspot(image)
-    window.blit(image, (-hotspot.x, -hotspot.y))
-
 class MainMenu(State):
     """ main menu select what save to edit """
+    update: bool = True
     buttons = [SlotButton(100, 100), SlotButton(100, 200), SlotButton(100, 300)]
     current_selection = Counter(0, 0, len(buttons)-1)
 
@@ -67,6 +62,7 @@ class MainMenu(State):
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
     def run(self) -> None:
+        self.update = True
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -79,15 +75,22 @@ class MainMenu(State):
                             self.globals.slot = int(self.current_selection)
                             print("enter been pressed for button", self.current_selection)
                             self.jump_to_state("Editor")
+                    self.update = True
+                if event.type == pygame.VIDEORESIZE:
+                    self.update = True
                 global_event_handler(self, event)
+            if not self.update: # void using cpu/gpu power when not needed
+                continue
             draw_background(self.window, Textures.background)
             self.draw_buttons()
             pygame.display.flip()
             self.clock.tick(FPS)
+            self.update = False
 
 
 def main() -> None:
     """ main function holds the main loop of the editor """
+    pygame.init()
     screen = pygame.display.set_mode(WINDOW_SIZE, pygame.RESIZABLE)
     # Create a basic 500x700 pixel window
 
