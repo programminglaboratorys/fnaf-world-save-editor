@@ -10,9 +10,10 @@ from states import State
 ColorLike = any
 
 FPS = 60
-WINDOW_SIZE = (500, 700)
-MAX_WINDOW_SIZE = (500, 700)
-MIN_WINDOW_SIZE = (500, 700)
+# 850x530
+WINDOW_SIZE = (500, 530)
+MAX_WINDOW_SIZE = (850, 530)
+MIN_WINDOW_SIZE = (500, 530)
 
 class TVector2(tuple):
     """ 2D vector """
@@ -93,12 +94,14 @@ def global_event_handler(state: State, event):
     """
     if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
         raise ExitGame()
-    return
     if event.type == pygame.VIDEORESIZE:
         width, height = event.size
-        default_width, default_height = WINDOW_SIZE
-        if width < default_width or width > default_width:
-            width = default_width
-        if height < default_height or height > default_height:
-            height = default_height
+        if width < MIN_WINDOW_SIZE[0]:
+            width = MIN_WINDOW_SIZE[0]
+        if width > MAX_WINDOW_SIZE[0]:
+            width = MAX_WINDOW_SIZE[0]
+        if height < MIN_WINDOW_SIZE[1]:
+            height = MIN_WINDOW_SIZE[1]
+        if height > MAX_WINDOW_SIZE[1]:
+            height = MAX_WINDOW_SIZE[1]
         state.window = pygame.display.set_mode((width, height), pygame.RESIZABLE)
