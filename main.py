@@ -1,29 +1,37 @@
-from constants import button_selected_texture, button_texture, exit_handler, FPS
-from helper import Counter
+""" main functionality of the editor """
+import pygame
+
+from constants import Textures, global_event_handler, FPS, WINDOW_SIZE
+from editor import Editor
+from helper import Counter, AttrDict
+from states import State, MainEditorStateManager
 
 from typing import Tuple
 from game_state.errors import ExitGame, ExitState
-from game_state import StateManager, State
 
-import pygame
 
 ###
 
 class Button:
     """ A simple button class. """
-    image = button_texture
-    image_selected = button_selected_texture
+    image = Textures.button # center (244, 60)
+    image_selected = Textures.button_selected
     def __init__(self, pos: Tuple[int, int]):
         self.x, self.y = pos
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
-    
+
     def draw(self, window, *, selected: bool = False):
         """ draw button """
         if selected:
             window.blit(self.image_selected, self.rect)
             return
         window.blit(self.image, self.rect)
+
+    def change_pos(self, pos: Tuple[int, int]):
+        """ change the position of the button """
+        self.x, self.y = pos
+        self.rect.x, self.rect.y = pos
 
 class MainMenu(State):
     """ main menu select what save to edit """
@@ -35,25 +43,29 @@ class MainMenu(State):
     def draw_buttons(self):
         """ Draws the buttons. """
         for index, button in enumerate(self.buttons):
-            button.draw(self.window, selected=index == self.current_selection)
+            button_centerx = self.window.get_rect().centerx - 244
+            button_centery = self.window.get_rect().centery - (index * 100)
+            #print(index,  150 - 60 + (index * 100))
+            #print(index, self.window.get_rect().centery, button_centery)
+            button.change_pos((button_centerx, button_centery))
+            button.draw(self.window, selected = index == self.current_selection)
+
+
 
     def run(self) -> None:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     match (event.key):
-                        case pygame.K_c:
-                            self.manager.change_state(
-                            "Editor"
-                            )  # Change our state to Editor
-                            self.manager.update_state()  # Updates / resets the state.
                         case pygame.K_DOWN:
                             self.current_selection += 1
                         case pygame.K_UP:
                             self.current_selection -= 1
                         case pygame.K_RETURN:
+                            self.manager.globals.slot = int(self.current_selection)
                             print("enter been pressed for button", self.current_selection)
-                exit_handler(event)
+                            self.jump_to_state("Editor")
+                global_event_handler(self, event)
             self.window.fill((124, 240, 0))
             self.draw_buttons()
             pygame.display.flip()
@@ -61,12 +73,11 @@ class MainMenu(State):
 
 
 def main() -> None:
-    screen = pygame.display.set_mode((500, 700))
+    screen = pygame.display.set_mode(WINDOW_SIZE, pygame.RESIZABLE)
     # Create a basic 500x700 pixel window
 
-    state_manager = StateManager(screen)
-    state_manager.load_states(MainMenu)
-    # We pass in all the screens that we want to use in our game / app.
+    state_manager = MainEditorStateManager(screen)
+    state_manager.load_states(MainMenu, Editor)
 
     state_manager.change_state("MainMenu")
     # Updates the current state to the desired state (screen) we want.
