@@ -46,13 +46,11 @@ class SlotButton:
             text_rect = text_surface.get_rect(centerx=self.x + texture.get_width() // 2,
                                               centery=self.y + texture.get_height() // 2)
             window.blit(text_surface, text_rect)
-class Background:
-    image = Textures.background
 
-    @classmethod
-    def draw(cls, window):
-        hotspot = get_surface_hotspot(cls.image)
-        window.blit(cls.image, (-hotspot.x, -hotspot.y))
+
+def draw_background(window, image):
+    hotspot = get_surface_hotspot(image)
+    window.blit(image, (-hotspot.x, -hotspot.y))
 
 class MainMenu(State):
     """ main menu select what save to edit """
@@ -63,10 +61,9 @@ class MainMenu(State):
         """ Draws the buttons. """
         window = self.window
         for index, button in enumerate(self.buttons):
-            #button.draw_in_center(self.window, index, index == self.current_selection)
-            #button.draw_text_in_center(self.window, f"SLOT {index+1}", index, index == self.current_selection)
             is_selected = index == self.current_selection
-            button.change_pos(window.get_rect().centerx - button.get_texture(is_selected).get_width() // 2, 100 + index * 100)
+            button.change_pos(window.get_rect().centerx - button.get_texture(is_selected).get_width() // 2,
+                               100 + index * 100)
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
     def run(self) -> None:
@@ -83,8 +80,7 @@ class MainMenu(State):
                             print("enter been pressed for button", self.current_selection)
                             self.jump_to_state("Editor")
                 global_event_handler(self, event)
-            Background.draw(self.window)
-            #self.window.fill((124, 240, 0))
+            draw_background(self.window, Textures.background)
             self.draw_buttons()
             pygame.display.flip()
             self.clock.tick(FPS)
