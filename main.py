@@ -2,15 +2,12 @@
 from game_state.errors import ExitGame, ExitState
 import pygame
 
-from constants import  global_event_handler, FPS, WINDOW_SIZE
+from constants import  global_event_handler, FPS, WINDOW_SIZE, EDITOR_DEBUG
 from textures import Textures, draw_background, render_text_with_outline
 from helper import Counter
 from states import State, MainEditorStateManager
 from editor import Editor
 
-
-
-###
 
 class SlotButton:
     """ A simple button class. """
@@ -63,6 +60,8 @@ class MainMenu(State):
 
     def run(self) -> None:
         self.update = True
+        if EDITOR_DEBUG:
+            self.jump_to_state("Editor")
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:

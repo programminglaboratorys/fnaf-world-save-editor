@@ -9,6 +9,7 @@ from states import State
 ColorLike = any
 
 FPS = 60
+EDITOR_DEBUG = True
 # 850x530
 WINDOW_SIZE = (500, 530)
 MAX_WINDOW_SIZE = (850, 530)
