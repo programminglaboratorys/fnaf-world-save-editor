@@ -92,3 +92,20 @@ class AttrDict(dict):
 
     def __repr__(self):
         return f"AttrDict({dict.__repr__(self)})"
+
+
+def subtract_vectors(*vectors: tuple[int, int]) -> tuple[int, int]:
+    """ Subtract 2D vectors"""
+    result = vectors[0]
+    for vector in vectors[1:]:
+        result = (result[0] - vector[0], result[1] - vector[1])
+    return result
+
+
+def add_vectors(*vectors: tuple[int, int]) -> tuple[int, int]:
+    """Subtract 2D vectors until a single vector is left."""
+    result = vectors[0]
+    for vector in vectors[1:]:
+        result = (result[0] + vector[0], result[1] + vector[1])
+    return result
+
