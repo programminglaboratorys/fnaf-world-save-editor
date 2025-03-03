@@ -10,7 +10,7 @@ from editor import Editor
 
 
 class SlotButton:
-    """ A simple button class. """
+    """ a simple button class. """
     image = Textures.button
     image_selected = Textures.button_selected
 

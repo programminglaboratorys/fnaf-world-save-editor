@@ -1,8 +1,9 @@
 """ Textures and helper functions for textures """
 from typing import Optional, Union
 from functools import lru_cache
+from helper import subtract_vectors
 import pygame
-
+import glob
 class TVector2(tuple):
     """ 2D vector """
     @property
@@ -29,28 +30,11 @@ def get_hotspot_from_string(surface: pygame.Surface, hotspot: str) -> tuple[int,
     + bot-left | bot-center | bot-right +
     + + + + + + + + + + + + + + + + + + +
     """
-    match hotspot.lower():
-        case "top-left":
-            hotspot = (0, 0)
-        case "top-center":
-            hotspot = (surface.get_width() // 2, 0)
-        case "top-right":
-            hotspot = (surface.get_width(), 0)
-        case "left":
-            hotspot = (0, surface.get_height() // 2)
-        case "center":
-            hotspot = (surface.get_width() // 2, surface.get_height() // 2)
-        case "right":
-            hotspot = (surface.get_width(), surface.get_height() // 2)
-        case "bot-left":
-            hotspot = (0, surface.get_height())
-        case "bot-center":
-            hotspot = (surface.get_width() // 2, surface.get_height())
-        case "bot-right":
-            hotspot = (surface.get_width(), surface.get_height())
-        case _:
-            raise ValueError(f"Invalid hotspot: {hotspot}")
-    return hotspot
+    rect = surface.get_rect()
+    try:
+        return getattr(rect, hotspot)
+    except AttributeError:
+        raise ValueError(f"Invalid hotspot: {hotspot}") from None
 
 def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None) -> pygame.Surface:
     """
@@ -68,6 +52,7 @@ def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None)
 def get_surface_hotspot(surface: pygame.Surface) -> Optional[TVector2]:
     """ get the hotspot of a surface """
     return _textures_hotspot_table.get(surface)
+
 def draw_background(window, image):
     """
     Draws a background image with a hotspot.
@@ -81,6 +66,7 @@ class Textures: # create a texture manager? is it worth it?
 
     button = load_image('textures/save-button.png', hotspot="center")
     button_selected = load_image('textures/save-button-selected.png', hotspot="center")
+    freddy = load_image('textures/characters/freddy.png', hotspot=(125, 220))
     background = load_image('textures/background.png')
 
 
