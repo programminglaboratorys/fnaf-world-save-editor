@@ -1,2 +1,5 @@
+[MASTER]
+disable=no-member
+
 [MESSAGES CONTROL]
 max-line-length=150
