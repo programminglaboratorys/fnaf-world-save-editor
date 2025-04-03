@@ -1,5 +1,6 @@
 """Helper classes for the editor"""
-from typing import Union
+from typing import Union, TypeVar
+T = TypeVar("T")
 
 class Counter:
     """Class to create a counter with a defined range. The counter can
@@ -108,4 +109,33 @@ def add_vectors(*vectors: tuple[int, int]) -> tuple[int, int]:
     for vector in vectors[1:]:
         result = (result[0] + vector[0], result[1] + vector[1])
     return result
+
+
+def instantiate(*args, **kwargs):
+    """
+    A decorator that instantiates the class with the given arguments.
+    
+    Args:
+        *args: arguments to pass to the class constructor
+        *kwargs: keyword arguments to pass to the class constructor
+    
+    Returns:
+        An instance of the class.
+
+    Example:
+    >>> @instantiate()
+    ... class A:
+    ...     pass
+    ...
+    >>> @instantiate(5)
+    ... class B:
+    ...     def __init__(self, value):
+    ...         self.value = value
+    ...
+    >>> print(B.value)
+    5
+    """
+    def decorator(cls: type[T]) -> T:
+        return cls(*args, **kwargs)
+    return decorator
 
