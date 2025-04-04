@@ -3,7 +3,8 @@ from game_state.errors import ExitGame, ExitState
 import pygame
 
 from constants import  global_event_handler, FPS, WINDOW_SIZE, EDITOR_DEBUG
-from textures import Textures, draw_background, render_text_with_outline
+from resources import Textures
+from graphics import draw_background, render_text_with_outline
 from helper import Counter
 from states import State, MainEditorStateManager
 from editor import Editor
