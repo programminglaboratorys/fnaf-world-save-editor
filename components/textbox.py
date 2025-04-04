@@ -99,6 +99,7 @@ class TextBox:
             print("TEST", self.rect.collidepoint(event.pos), "FOR", self.id, "RENDER RECT", self.rect, "RERE INSTEAD", self.render_rect.collidepoint(event.pos))
 
     def execute(self):
+        """ execute the command with the current self.final as argument """
         if self.command:
             self.command(self.id, self.final)
         self.active = not self.inactive_on_enter
@@ -110,13 +111,14 @@ class TextBox:
         return self.font.render(text, True, self.font_color)
     
     def force_update(self):
+        """ force an update of the text box without needing to be focused """
         self.final = "".join(self.buffer)
         self.rendered = self.render_font(self.final)
         self.render_rect = self.rendered.get_rect(x=self.rect.x+2,
                                                   centery=self.rect.centery)
         if self.render_rect.width > self.rect.width-6:
             offset = self.render_rect.width-(self.rect.width-6)
-            self.render_area = pg.Rect(offset,0,self.rect.width-6,
+            self.render_area = pg.Rect(offset, 0, self.rect.width-6,
                                        self.render_rect.height)
         else:
             self.render_area = self.rendered.get_rect(topleft=(0,0))
