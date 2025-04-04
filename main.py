@@ -91,6 +91,7 @@ class MainMenu(State):
 def main() -> None:
     """ main function holds the main loop of the editor """
     pygame.init()
+    pygame.display.set_caption("FNaF World Save Editor")
     screen = pygame.display.set_mode(WINDOW_SIZE, pygame.RESIZABLE)
     # Create a basic 500x700 pixel window
 
