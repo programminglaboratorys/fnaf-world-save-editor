@@ -36,5 +36,3 @@ class Textures: # create a texture manager? is it worth it?
     button_selected = load_image('textures/save-button-selected.png', hotspot="center")
     freddy = load_image('textures/characters/freddy.png', hotspot=(125, 220))
     background = load_image('textures/background.png')
-
-

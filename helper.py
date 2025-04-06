@@ -1,6 +1,6 @@
 """Helper classes for the editor"""
 from typing import Union, TypeVar
-import os 
+import os
 T = TypeVar("T")
 
 class Counter:
@@ -149,4 +149,3 @@ def quick_load(name: str, dpath: str):
     with open(dpath, encoding="UTF-8") as f:
         data = f.read()
     return data
-
