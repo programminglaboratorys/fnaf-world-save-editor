@@ -1,5 +1,6 @@
 """Helper classes for the editor"""
 from typing import Union, TypeVar
+import os 
 T = TypeVar("T")
 
 class Counter:
@@ -138,4 +139,14 @@ def instantiate(*args, **kwargs):
     def decorator(cls: type[T]) -> T:
         return cls(*args, **kwargs)
     return decorator
+
+
+def quick_load(name: str, dpath: str):
+    """ load a file and return the data as a string """
+    if not os.path.exists(dpath):
+        print(f"WARNING: no json file found for {name!r} ({dpath!r})")
+        return None
+    with open(dpath, encoding="UTF-8") as f:
+        data = f.read()
+    return data
 

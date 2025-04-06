@@ -26,7 +26,7 @@ class LazyAttributes:
 class FontBank(LazyAttributes):
     """ A class that loads fonts lazily when they are accessed """
     arialnb_font: pygame.font.Font = lambda self: pygame.font.Font("textures/fonts/ARIALNB.TTF", 30)
-    lcd_font: pygame.font.Font = lambda self: pygame.font.Font("textures/fonts/LcdSolid.ttf", 30)
+    lcd_font: pygame.font.Font = lambda self: pygame.font.Font("textures/fonts/LcdSolid.ttf", 20)
 
 
 class Textures: # create a texture manager? is it worth it?
