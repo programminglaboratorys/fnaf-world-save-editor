@@ -1,6 +1,7 @@
 """ Textures and helper functions for textures """
-import pygame
 from typing import Optional, Union
+
+import pygame
 
 from geometry import TVector2
 
@@ -21,11 +22,13 @@ def get_hotspot_from_string(surface: pygame.Surface, hotspot: str) -> tuple[int,
     except AttributeError:
         raise ValueError(f"Invalid hotspot: {hotspot}") from None
 
-def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None) -> pygame.Surface:
+def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None, *, convert = False) -> pygame.Surface:
     """
     Load an image with a hotspot
     """
     image = pygame.image.load(path)
+    if convert:
+        image = image.convert()
     if hotspot is None:
         hotspot = (0, 0)
     if isinstance(hotspot, str):

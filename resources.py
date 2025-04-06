@@ -25,14 +25,15 @@ class LazyAttributes:
 @instantiate()
 class FontBank(LazyAttributes):
     """ A class that loads fonts lazily when they are accessed """
-    arialnb_font: pygame.font.Font = lambda self: pygame.font.Font("textures/fonts/ARIALNB.TTF", 30)
-    lcd_font: pygame.font.Font = lambda self: pygame.font.Font("textures/fonts/LcdSolid.ttf", 20)
+    arialnb_font: pygame.font.Font = lambda _: pygame.font.Font("textures/fonts/ARIALNB.TTF", 30)
+    lcd_font: pygame.font.Font = lambda _: pygame.font.Font("textures/fonts/LcdSolid.ttf", 20)
 
-
-class Textures: # create a texture manager? is it worth it?
+# pylint: disable=unnecessary-lambda-assignment
+@instantiate()
+class Textures(LazyAttributes):
     """ holds the textures used in the editor """
 
-    button = load_image('textures/save-button.png', hotspot="center")
-    button_selected = load_image('textures/save-button-selected.png', hotspot="center")
-    freddy = load_image('textures/characters/freddy.png', hotspot=(125, 220))
-    background = load_image('textures/background.png')
+    button = lambda _: load_image('textures/save-button.png', hotspot="center")
+    button_selected = lambda _ : load_image('textures/save-button-selected.png', hotspot="center")
+    freddy = lambda _ : load_image('textures/characters/freddy.png', hotspot=(125, 220))
+    background = lambda _ : load_image('textures/background.png', convert=True)
