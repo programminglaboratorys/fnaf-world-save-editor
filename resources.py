@@ -5,6 +5,7 @@ from helper import instantiate
 from textures import load_image
 
 CHARACTER_TEXTURES_PATH = "textures/characters/"
+Surface = pygame.Surface
 
 class LazyAttributes:
     """
@@ -33,7 +34,8 @@ class FontBank(LazyAttributes):
 class Textures(LazyAttributes):
     """ holds the textures used in the editor """
 
-    button = lambda _: load_image('textures/save-button.png', hotspot="center")
-    button_selected = lambda _ : load_image('textures/save-button-selected.png', hotspot="center")
-    freddy = lambda _ : load_image('textures/characters/freddy.png', hotspot=(125, 220))
-    background = lambda _ : load_image('textures/background.png', convert=True)
+    button: Surface = lambda _: load_image('textures/save-button.png', hotspot="center")
+    button_selected: Surface = lambda _ : load_image('textures/save-button-selected.png', hotspot="center")
+    # TODO: make a default texture for characters
+    freddy: Surface = lambda _ : load_image('textures/characters/freddy.png', hotspot=(125, 220))
+    background: Surface = lambda _ : load_image('textures/background.png', convert=True)
