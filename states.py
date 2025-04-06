@@ -24,6 +24,7 @@ class MainEditorStateManager(StateManager):
 class State(orgState):
     """ The main state class for the editor. """
     manager: MainEditorStateManager
+    focused: bool = True
 
     @property
     def globals(self) ->  AttrDict:
