@@ -101,13 +101,16 @@ class AnimatatedObject:
         """
         self.animations[name] = animation
 
-    def draw(self, window, clock: pygame.time.Clock, position):
+    def draw(self, window, deltatime: int, position):
         """ Draw the current animation. """
         animation = self.current_animation
-        self.elapsed += clock.get_time()
-        if self.elapsed > animation.speed:
-            #self.elapsed -= animation.speed
-            self.elapsed = 0
+        # TODO: move to an update function, update functions take responsibility of such
+        if animation.stop or self.stop or animation.static:
+            return
+        self.elapsed += deltatime
+        frames_to_skip = self.elapsed // animation.speed
+        self.elapsed -= frames_to_skip * animation.speed
+        for _ in range(frames_to_skip):
             animation.animate()
         animation.draw(window, position)
 
