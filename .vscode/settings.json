@@ -4,5 +4,13 @@
     "--rcfile=C:\\Users\\ACER\\Desktop\\myproject\\fnaf-world-save-editor\\.pylintrc",
     "--generated-members",
     "(FontBank|Textures).*"
-  ]
+  ],
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "isort.args": ["--profile", "black"]
 }
