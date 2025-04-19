@@ -13,7 +13,7 @@ from utils.helper import add_vectors, subtract_vectors, quick_load
 from graphics.textures import load_image
 from graphics import draw_background
 from components.animate import AnimatatedObject, Animation
-from characterbox import CharacterBox
+from components.characterbox import CharacterBox
 
 def load_location_buttons():
     """ load the location buttons """
