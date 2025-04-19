@@ -1,5 +1,5 @@
 [MASTER]
-disable=no-member, fixme
+disable=fixme
 
 [MESSAGES CONTROL]
 max-line-length=150

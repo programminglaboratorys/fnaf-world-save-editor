@@ -3,6 +3,6 @@
     "--extension-pkg-whitelist=pygame",
     "--rcfile=C:\\Users\\ACER\\Desktop\\myproject\\fnaf-world-save-editor\\.pylintrc",
     "--generated-members",
-    "arialnb_font"
+    "(FontBank|Textures).*"
   ]
 }
