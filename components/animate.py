@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 
 import pygame
 
-from textures import get_surface_hotspot, TVector2
+from graphics.textures import get_surface_hotspot, TVector2
 
 class AnimationNotFound(KeyError):
     """ Error raised when an animation is not found. """

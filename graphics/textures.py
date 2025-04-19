@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 import pygame
 
-from geometry import TVector2
+from .geometry import TVector2
 
 _textures_hotspot_table: dict[pygame.Surface, TVector2] = {}
 

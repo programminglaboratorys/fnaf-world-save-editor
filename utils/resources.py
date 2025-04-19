@@ -1,8 +1,8 @@
 """ a module for resources like fonts and images """
 # pylint: disable=too-few-public-methods
 import pygame
-from helper import instantiate
-from textures import load_image
+from .helper import instantiate
+from graphics.textures import load_image
 
 CHARACTER_TEXTURES_PATH = "textures/characters/"
 Surface = pygame.Surface

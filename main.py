@@ -1,11 +1,14 @@
 """ main functionality of the editor """
+import os
+os.sys.path.append(os.getcwd())
+
 from game_state.errors import ExitGame, ExitState
 import pygame
 
-from constants import  global_event_handler, FPS, WINDOW_SIZE, EDITOR_DEBUG
-from resources import Textures
+from utils.constants import  global_event_handler, FPS, WINDOW_SIZE, EDITOR_DEBUG
+from utils.resources import Textures
+from utils.helper import Counter
 from graphics import draw_background, render_text_with_outline
-from helper import Counter
 from states import State, MainEditorStateManager
 from editor import Editor
 

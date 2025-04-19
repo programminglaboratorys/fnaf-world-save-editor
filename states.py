@@ -8,7 +8,7 @@ which is based on `game_state.State` and has extra functionality such as
 
 """
 
-from helper import AttrDict
+from utils.helper import AttrDict
 from game_state import State as orgState, StateManager
 
 class MainEditorStateManager(StateManager):
