@@ -1,25 +1,34 @@
+"""
+2D vector and some geometry functions
+
+This module provides a TVector2 class and a circlepoints function.
+"""
+
 from functools import lru_cache
 
+
 class TVector2(tuple):
-    """ 2D vector """
+    """2D vector"""
+
     @property
     def x(self):
-        """ x component of the vector """
+        """x component of the vector"""
         return self[0]
 
     @property
     def y(self):
-        """ y component of the vector """
+        """y component of the vector"""
         return self[1]
 
     def __repr__(self):
         return f"TVector2(x={self.x}, y={self.y})"
 
+
 @lru_cache
 def circlepoints(r):
     """
     Returns a list of points in a circle of radius r centered at the origin.
-    
+
     This function uses Bresenham's circle algorithm to generate the points.
     """
     x, y, e = r, 0, 1 - r

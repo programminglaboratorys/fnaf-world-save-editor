@@ -8,7 +8,14 @@ import pygame
 from .geometry import circlepoints
 from .textures import get_surface_hotspot
 
-def render_text_with_outline(text: str, font: pygame.Font, gfcolor=pygame.Color('dodgerblue'), ocolor=(0, 0, 0), opx=2):
+
+def render_text_with_outline(
+    text: str,
+    font: pygame.Font,
+    gfcolor=pygame.Color("dodgerblue"),
+    ocolor=(0, 0, 0),
+    opx=2,
+):
     """
     Render text with an outline
     """

@@ -1,7 +1,10 @@
 """Helper classes for the editor"""
-from typing import Union, TypeVar
+
 import os
+from typing import TypeVar, Union
+
 T = TypeVar("T")
+
 
 class Counter:
     """Class to create a counter with a defined range. The counter can
@@ -9,6 +12,7 @@ class Counter:
     will be clamped to the range if it goes outside of it. If the
     strict flag is set, a ValueError will be raised if the value
     goes outside of the range."""
+
     def __init__(self, value: int, min_val: int, max_val: int, *, strict: bool = False):
         self._min = min_val
         self._max = max_val
@@ -17,7 +21,9 @@ class Counter:
         # Validate initial value
         if not min_val <= value <= max_val:
             if strict:
-                raise ValueError(f"Initial value {value} must be between {min_val} and {max_val}")
+                raise ValueError(
+                    f"Initial value {value} must be between {min_val} and {max_val}"
+                )
             else:
                 # Fix the value by clamping it
                 value = min(max(value, min_val), max_val)
@@ -27,24 +33,28 @@ class Counter:
     def __int__(self):
         return self.value
 
-    def __add__(self, other: int) -> 'Counter':
+    def __add__(self, other: int) -> "Counter":
         result_value = int(self) + other
 
         if not self._min <= result_value <= self._max:
             if self.strict:
-                raise ValueError(f"Result {result_value} must be between {self._min} and {self._max}")
+                raise ValueError(
+                    f"Result {result_value} must be between {self._min} and {self._max}"
+                )
             else:
                 # Fix the value by clamping it
                 result_value = min(max(result_value, self._min), self._max)
 
         return Counter(result_value, self._min, self._max, strict=self.strict)
 
-    def __sub__(self, other: int) -> 'Counter':
+    def __sub__(self, other: int) -> "Counter":
         result_value = int(self) - other
 
         if not self._min <= result_value <= self._max:
             if self.strict:
-                raise ValueError(f"Result {result_value} must be between {self._min} and {self._max}")
+                raise ValueError(
+                    f"Result {result_value} must be between {self._min} and {self._max}"
+                )
             else:
                 # Fix the value by clamping it
                 result_value = min(max(result_value, self._min), self._max)
@@ -55,8 +65,9 @@ class Counter:
         mode = "strict" if self.strict else "non-strict"
         return f"Counter(value={int(self)}, bounds=[{self._min}, {self._max}], mode='{mode}')"
 
-    def __eq__(self, other: Union[int,'Counter']):
+    def __eq__(self, other: Union[int, "Counter"]):
         return int(other) == int(self)
+
 
 class AttrDict(dict):
     """
@@ -74,11 +85,14 @@ class AttrDict(dict):
         print(attr_dict.foo)  # prints 'bar'
         print(attr_dict['foo'])  # prints 'bar'
     """
+
     def __getattr__(self, attr):
         try:
             return self[attr]
         except KeyError:
-            raise AttributeError(f"type object '{type(self).__name__}' has no attribute '{attr}'") from None
+            raise AttributeError(
+                f"type object '{type(self).__name__}' has no attribute '{attr}'"
+            ) from None
 
     def __setattr__(self, attr, value):
         self[attr] = value
@@ -87,7 +101,9 @@ class AttrDict(dict):
         try:
             del self[attr]
         except KeyError:
-            raise AttributeError(f"type object '{type(self).__name__}' has no attribute '{attr}'") from None
+            raise AttributeError(
+                f"type object '{type(self).__name__}' has no attribute '{attr}'"
+            ) from None
 
     def __dir__(self):
         return list(self) + dir(type(self))
@@ -97,7 +113,7 @@ class AttrDict(dict):
 
 
 def subtract_vectors(*vectors: tuple[int, int]) -> tuple[int, int]:
-    """ Subtract 2D vectors"""
+    """Subtract 2D vectors"""
     result = vectors[0]
     for vector in vectors[1:]:
         result = (result[0] - vector[0], result[1] - vector[1])
@@ -115,11 +131,11 @@ def add_vectors(*vectors: tuple[int, int]) -> tuple[int, int]:
 def instantiate(*args, **kwargs):
     """
     A decorator that instantiates the class with the given arguments.
-    
+
     Args:
         *args: arguments to pass to the class constructor
         *kwargs: keyword arguments to pass to the class constructor
-    
+
     Returns:
         An instance of the class.
 
@@ -136,13 +152,15 @@ def instantiate(*args, **kwargs):
     >>> print(B.value)
     5
     """
+
     def decorator(cls: type[T]) -> T:
         return cls(*args, **kwargs)
+
     return decorator
 
 
 def quick_load(name: str, dpath: str):
-    """ load a file and return the data as a string """
+    """load a file and return the data as a string"""
     if not os.path.exists(dpath):
         print(f"WARNING: no json file found for {name!r} ({dpath!r})")
         return None

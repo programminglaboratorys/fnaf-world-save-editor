@@ -1,9 +1,10 @@
 """
 Constants used globally in the editor.
 """
-import pygame
 
+import pygame
 from game_state.errors import ExitGame
+
 from states import State
 
 ColorLike = any
@@ -15,6 +16,7 @@ WINDOW_SIZE = (500, 530)
 MAX_WINDOW_SIZE = (850, 530)
 MIN_WINDOW_SIZE = (500, 530)
 
+
 def global_event_handler(state: State, event):
     """
     global event handler, handles pygame.QUIT and pygame.VIDEORESIZE
@@ -23,7 +25,11 @@ def global_event_handler(state: State, event):
         state.focused = False
     elif event.type == pygame.WINDOWFOCUSGAINED:
         state.focused = True
-    elif event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+    elif (
+        event.type == pygame.QUIT
+        or event.type == pygame.KEYDOWN
+        and event.key == pygame.K_q
+    ):
         raise ExitGame()
     elif event.type == pygame.VIDEORESIZE:
         width, height = event.size

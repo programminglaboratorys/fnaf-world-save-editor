@@ -1,41 +1,48 @@
-""" main functionality of the editor """
+"""main functionality of the editor"""
+
+# pylint: disable=all
+# append the script directory to the path
 import os
-os.sys.path.append(os.getcwd())
 
-from game_state.errors import ExitGame, ExitState
+os.sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+# pylint: enable=all
+
 import pygame
+from game_state.errors import ExitGame, ExitState
 
-from utils.constants import  global_event_handler, FPS, WINDOW_SIZE, EDITOR_DEBUG
-from utils.resources import Textures
-from utils.helper import Counter
-from graphics import draw_background, render_text_with_outline
-from states import State, MainEditorStateManager
 from editor import Editor
+from graphics import draw_background, render_text_with_outline
+from states import MainEditorStateManager, State
+from utils.constants import EDITOR_DEBUG, FPS, WINDOW_SIZE, global_event_handler
+from utils.helper import Counter
+from utils.resources import Textures
 
 
 class SlotButton:
-    """ a simple button class. """
+    """a simple button class."""
+
     image = Textures.button
     image_selected = Textures.button_selected
 
-    def __init__(self, x: int, y: int, text: str = "", font_size = 50):
+    def __init__(self, x: int, y: int, text: str = "", font_size=50):
         self.x = x
         self.y = y
         self.text = text
         self.font_size = font_size
 
     def get_texture(self, selected: bool):
-        """ get the texture of the button based on if the button is selected or not """
+        """get the texture of the button based on if the button is selected or not"""
         return self.image_selected if selected else self.image
 
     def change_pos(self, x: int, y: int):
-        """ change the position of the button """
+        """change the position of the button"""
         self.x = x
         self.y = y
 
-    def draw(self, window, selected: bool, text: str = ""):
-        """ draw the button """
-        texture = self.get_texture(selected)
+    def draw(self, window: pygame.Surface, selected: bool, text: str = ""):
+        """draw the button"""
+        texture: pygame.Surface = self.get_texture(selected)
         rect = texture.get_rect()
         rect.x, rect.y = self.x, self.y
         window.blit(texture, rect)
@@ -43,23 +50,30 @@ class SlotButton:
         if text:
             font = pygame.font.Font(None, self.font_size)
             text_surface = render_text_with_outline(text, font, (255, 255, 255))
-            text_rect = text_surface.get_rect(centerx=self.x + texture.get_width() // 2,
-                                              centery=self.y + texture.get_height() // 2)
+            text_rect = text_surface.get_rect(
+                centerx=self.x + texture.get_width() // 2,
+                centery=self.y + texture.get_height() // 2,
+            )
             window.blit(text_surface, text_rect)
 
+
 class MainMenu(State):
-    """ main menu select what save to edit """
+    """main menu select what save to edit"""
+
     update: bool = True
     buttons = [SlotButton(100, 100), SlotButton(100, 200), SlotButton(100, 300)]
-    current_selection = Counter(0, 0, len(buttons)-1)
+    current_selection = Counter(0, 0, len(buttons) - 1)
 
     def draw_buttons(self):
-        """ Draws the buttons. """
+        """Draws the buttons."""
         window = self.window
         for index, button in enumerate(self.buttons):
             is_selected = index == self.current_selection
-            button.change_pos(window.get_rect().centerx - button.get_texture(is_selected).get_width() // 2,
-                               100 + index * 100)
+            button.change_pos(
+                window.get_rect().centerx
+                - button.get_texture(is_selected).get_width() // 2,
+                100 + index * 100,
+            )
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
     def run(self) -> None:
@@ -76,13 +90,15 @@ class MainMenu(State):
                             self.current_selection -= 1
                         case pygame.K_RETURN:
                             self.globals.slot = int(self.current_selection)
-                            print("enter been pressed for button", self.current_selection)
+                            print(
+                                "enter been pressed for button", self.current_selection
+                            )
                             self.jump_to_state("Editor")
                     self.update = True
                 if event.type == pygame.VIDEORESIZE:
                     self.update = True
                 global_event_handler(self, event)
-            if not self.update: # void using cpu/gpu power when not needed
+            if not self.update:  # avoid using cpu/gpu power when not needed
                 continue
             draw_background(self.window, Textures.background)
             self.draw_buttons()
@@ -92,7 +108,7 @@ class MainMenu(State):
 
 
 def main() -> None:
-    """ main function holds the main loop of the editor """
+    """main function holds the main loop of the editor"""
     pygame.init()
     pygame.display.set_caption("FNaF World Save Editor")
     screen = pygame.display.set_mode(WINDOW_SIZE, pygame.RESIZABLE)

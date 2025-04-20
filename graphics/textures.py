@@ -1,4 +1,5 @@
-""" Textures and helper functions for textures """
+"""Textures and helper functions for textures"""
+
 from typing import Optional, Union
 
 import pygame
@@ -6,6 +7,7 @@ import pygame
 from .geometry import TVector2
 
 _textures_hotspot_table: dict[pygame.Surface, TVector2] = {}
+
 
 def get_hotspot_from_string(surface: pygame.Surface, hotspot: str) -> tuple[int, int]:
     """
@@ -22,7 +24,10 @@ def get_hotspot_from_string(surface: pygame.Surface, hotspot: str) -> tuple[int,
     except AttributeError:
         raise ValueError(f"Invalid hotspot: {hotspot}") from None
 
-def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None, *, convert = False) -> pygame.Surface:
+
+def load_image(
+    path: str, hotspot: Optional[Union[tuple[int, int], str]] = None, *, convert=False
+) -> pygame.Surface:
     """
     Load an image with a hotspot
     """
@@ -37,6 +42,7 @@ def load_image(path: str, hotspot: Optional[Union[tuple[int, int], str]] = None,
     _textures_hotspot_table[image] = TVector2(hotspot)
     return image
 
+
 def get_surface_hotspot(surface: pygame.Surface) -> Optional[TVector2]:
-    """ get the hotspot of a surface """
+    """get the hotspot of a surface"""
     return _textures_hotspot_table.get(surface)
