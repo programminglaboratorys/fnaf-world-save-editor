@@ -2,12 +2,14 @@
 Constants used globally in the editor.
 """
 
+from typing import Union
+
 import pygame
 from game_state.errors import ExitGame
 
 from states import State
 
-ColorLike = any
+ColorLike = Union[pygame.Color, tuple[int, int, int], tuple[int, int, int, int], int]
 
 FPS = 60
 EDITOR_DEBUG = True
@@ -17,7 +19,7 @@ MAX_WINDOW_SIZE = (850, 530)
 MIN_WINDOW_SIZE = (500, 530)
 
 
-def global_event_handler(state: State, event):
+def global_event_handler(state: State, event: pygame.event.Event):
     """
     global event handler, handles pygame.QUIT and pygame.VIDEORESIZE
     """
