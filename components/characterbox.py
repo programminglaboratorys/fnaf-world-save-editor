@@ -158,6 +158,7 @@ class CharacterBox:
 
     def render(self, window: pygame.Surface, deltatime: int):
         """draw character box"""
+        # TODO: render background in it's own function, and also Input box should be in it's own function too
         # size = subtract_vectors((win_react.width, win_react.height), (self.height, self.width)) # (300, 380)
         size = self.size
         surf = pygame.Surface(size, pygame.SRCALPHA)
@@ -182,11 +183,3 @@ class CharacterBox:
         self.level_textbox.draw(window)
         self.next_textbox.draw(window)
         self.render_character(window, deltatime)
-
-
-# TODO: complete the class
-class ButtonsGrid:
-    """grid of buttons, holds the buttons and the current selected button"""
-
-    def __init__(self):
-        self.current_selected_button = 0

@@ -51,7 +51,7 @@ class Textures(LazyAttributes):
     button_selected: Surface = lambda _: load_image(
         "textures/save-button-selected.png", hotspot="center"
     )
-    # TODO: make a default texture for characters
+    # TODO: make a default texture for characters when failure to load texture happens
     freddy: Surface = lambda _: load_image(
         "textures/characters/freddy.png", hotspot=(125, 220)
     )

@@ -63,13 +63,13 @@ class Editor(State):
 
     def setup(self):
         self.characterbox = CharacterBox()
-        # self.characterbox.force_update = True
         # TODO: load in a separate thread
         self.load_action_buttons()
 
     def render_locations_buttons(self, deltatime: int):
         """render locations buttons"""
         # TODO: simplified, this is hard to read
+        # FIXME: they no longer render for some mysterious reason
         self.locations_buttons.change_animation(0)
         for index in range(1, len(self.locations_buttons.animations)):
             self.locations_buttons.draw(

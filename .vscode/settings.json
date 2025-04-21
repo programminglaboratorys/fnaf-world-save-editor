@@ -1,7 +1,7 @@
 {
   "pylint.args": [
     "--extension-pkg-whitelist=pygame",
-    "--rcfile=C:\\Users\\ACER\\Desktop\\myproject\\fnaf-world-save-editor\\.pylintrc",
+    "--rcfile=.pylintrc",
     "--generated-members",
     "(FontBank|Textures).*"
   ],
