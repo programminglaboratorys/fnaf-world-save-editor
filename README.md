@@ -1,5 +1,10 @@
 ### TODO
 
 - add a proper readme
-- add a proper license
 - other
+
+### SITES
+
+places where I would release fwse or do devlogs
+
+- [fwse at gamejolt](https://gamejolt.com/games/fwse/976580)
