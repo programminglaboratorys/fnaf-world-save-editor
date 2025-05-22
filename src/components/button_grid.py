@@ -8,21 +8,20 @@ import pygame
 class Button:
     """A simple button class for Pygame."""
 
+    __slots__ = ("rect", "text", "font", "color", "hover_color", "current_color")
+
     def __init__(
         self,
         position,
         size,
-        text="",
-        font=None,
-        color=(255, 255, 255),
-        hover_color=(200, 200, 200),
+        **kwargs,
     ):
         self.rect = pygame.Rect(*position, *size)
-        self.text = text
-        self.font = font or pygame.font.Font(None, 36)
-        self.color = color
-        self.hover_color = hover_color
-        self.current_color = color
+        self.text = kwargs.get("text", "")
+        self.font = kwargs.get("font") or pygame.font.Font(None, 36)
+        self.color = kwargs.get("color", (255, 255, 255))
+        self.hover_color = kwargs.get("hover_color", (200, 200, 200))
+        self.current_color = self.color
 
     @property
     def width(self):
@@ -44,7 +43,7 @@ class Button:
         """The y position of the button."""
         return self.rect.y
 
-    def draw(self, surface):
+    def draw(self, surface, daltetime: int):
         """Draw the button on the screen."""
         pygame.draw.rect(surface, self.current_color, self.rect)
         text_surf = self.font.render(self.text, True, (0, 0, 0))
@@ -87,7 +86,7 @@ class ButtonsGrid(dict[str, Button]):
                 self.current_selected_button = list(self.keys()).index(name)
                 self.on_button_clicked(name, button)
 
-    def draw(self, surface: pygame.Surface):
+    def draw(self, surface: pygame.Surface, _: int):
         """draw the buttons"""
         if len(self) == 0:
             return

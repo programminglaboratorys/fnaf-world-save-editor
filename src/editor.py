@@ -2,7 +2,7 @@
 
 import glob
 import json
-from os import path
+import os
 
 import pygame
 
@@ -21,7 +21,7 @@ def load_location_buttons():
     locations_buttons = AnimatatedObject()
     for file in glob.iglob("textures/locations/*.png"):
         texture = load_image(file, hotspot="center")
-        name = path.basename(file).split(".")[0]
+        name = os.path.basename(file).split(".")[0]
         animation = Animation(frames=[texture], speed=0, repeat=-1)
         locations_buttons.add_animation(name, animation)
     locations_buttons.change_animation(0)
@@ -54,7 +54,7 @@ class Editor(State):
             print("no json file found for done button")
             return
         done_frames = [
-            load_image(path.join("textures/done button/", frame), hotspot="center")
+            load_image(os.path.join("textures/done button/", frame), hotspot="topleft")
             for frame in json.loads(done_data)["frames"]
         ]
         animation = Animation(frames=done_frames, speed=50, repeat=-1)
@@ -69,27 +69,45 @@ class Editor(State):
     def render_locations_buttons(self, deltatime: int):
         """render locations buttons"""
         # TODO: simplified, this is hard to read
-        # FIXME: they no longer render for some mysterious reason
+        # TODO: actually check if areas are opened or not
         self.locations_buttons.change_animation(0)
-        for index in range(1, len(self.locations_buttons.animations)):
+        self.locations_buttons.draw(
+            self.window,
+            deltatime,
+            add_vectors(self.window.get_rect().topleft, (30, 50)),
+        )  # draw location 1
+        # print(self.locations_buttons.animations.keys())
+        for index in range(1, len(self.locations_buttons.animations) - 1):
+            # 2 location is id 1, 3 location is id 2, etc
+            if self.save[self.sectionid].get(f"sw{index}") != "1":
+                self.locations_buttons.change_animation(
+                    len(self.locations_buttons.animations) - 1
+                )
+            else:
+                self.locations_buttons.change_animation(index)
             self.locations_buttons.draw(
                 self.window,
                 deltatime,
-                add_vectors(self.window.get_rect().topleft, (30, index * 50)),
+                add_vectors(self.window.get_rect().topleft, (30, (index + 1) * 50)),
             )
-            self.locations_buttons.change_animation(index)
+            # self.locations_buttons.change_animation(index)
 
     def render_action_buttons(self, deltatime):
         """render action buttons"""
-        win_react = self.window.get_rect()
+        # win_react = self.window.get_rect()
+        characterbox = self.characterbox
         self.action_buttons.draw(
-            self.window, deltatime, (win_react.width - 315, win_react.height - 100)
+            self.window,
+            deltatime,
+            pygame.Vector2(characterbox.x, characterbox.y)
+            + pygame.Vector2(0, characterbox.height)
+            + (-1, 10),
         )
 
     def run(self) -> None:
         """Editor mainloop"""
         self.go_back = False
-        font = pygame.font.Font(None, 30)
+        # font = pygame.font.Font(None, 30)
         while True:
             deltatime = self.clock.tick(
                 FPS
@@ -110,9 +128,9 @@ class Editor(State):
             draw_background(self.window, Textures.background)
 
             # draw the current slot
-            text = font.render(str(self.globals.slot), 1, (255, 255, 255))
-            textpos = text.get_rect(centerx=10, centery=10)
-            self.window.blit(text, textpos)
+            # text = font.render(str(self.globals.slot), 1, (255, 255, 255))
+            # textpos = text.get_rect(centerx=10, centery=10)
+            # self.window.blit(text, textpos)
 
             self.characterbox.render(self.window, deltatime)
             self.render_locations_buttons(deltatime)

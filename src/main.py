@@ -8,6 +8,8 @@ os.sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # pylint: enable=all
 
+from threading import Thread
+
 import pygame
 from game_state.errors import ExitGame, ExitState
 
@@ -76,10 +78,25 @@ class MainMenu(State):
             )
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
+    def load_and_jump(self):
+
+        # TODO: load in a thread and
+        # create a loading frame, spinning fredbear animation?
+        # sad animation when failure to load save file
+
+        self.save.read(
+            os.path.join(
+                os.getenv("APPDATA"),
+                "MMFApplications",
+                f"fnafwr{self.globals.slot+1}",
+            )
+        )
+        self.jump_to_state("Editor")
+
     def run(self) -> None:
         self.update = True
         if EDITOR_DEBUG:
-            self.jump_to_state("Editor")
+            self.load_and_jump()
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -93,7 +110,7 @@ class MainMenu(State):
                             print(
                                 "enter been pressed for button", self.current_selection
                             )
-                            self.jump_to_state("Editor")
+                            self.load_and_jump()
                     self.update = True
                 if event.type == pygame.VIDEORESIZE:
                     self.update = True

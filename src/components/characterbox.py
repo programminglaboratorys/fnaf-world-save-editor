@@ -110,6 +110,16 @@ class CharacterBox:
         self.force_update = True
         self.load_characters_animations()
 
+    @property
+    def width(self):
+        """The width of the character box."""
+        return self.size[0]
+
+    @property
+    def height(self):
+        """The height of the character box."""
+        return self.size[1]
+
     def render_character(self, surface: pygame.Surface, deltatime):
         """render current selected character"""
         if self.last_selected_character != self.current_selected_character:
@@ -121,7 +131,7 @@ class CharacterBox:
             (self.x, self.y), self.size, (-(height // 1.85), -(width // 3))
         )  # subtract_vectors((380, 300), (0, -20))
         self.characters.draw(surface, deltatime, position)
-        pygame.draw.circle(surface, (255, 0, 0), position, 5)
+        # pygame.draw.circle(surface, (255, 0, 0), position, 5) # debug character hotspot
 
     def calculate_rect_for_texbox(self, index=0):
         """calculate the rect for the text box"""
@@ -175,11 +185,6 @@ class CharacterBox:
         self.next_textbox.rect = pygame.Rect(self.calculate_rect_for_texbox(index=0))
         self.level_textbox.rect = pygame.Rect(self.calculate_rect_for_texbox(index=1))
         window.blit(surf, (self.x, self.y))
-        pygame.draw.rect(window, (0, 0, 255), self.level_textbox.rect)
-        pygame.draw.rect(window, (255, 0, 0), self.level_textbox.render_rect)
-
-        pygame.draw.rect(window, (0, 0, 255), self.next_textbox.rect)
-        pygame.draw.rect(window, (255, 0, 0), self.next_textbox.render_rect)
         self.level_textbox.draw(window)
         self.next_textbox.draw(window)
         self.render_character(window, deltatime)

@@ -118,6 +118,7 @@ class AnimatatedObject:
         animation = self.current_animation
         # TODO: move to an update function, update functions take responsibility of such
         if animation.stop or self.stop or animation.static:
+            animation.draw(window, position)
             return
         self.elapsed += deltatime
         frames_to_skip = self.elapsed // animation.speed
