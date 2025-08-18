@@ -8,6 +8,7 @@
 places where I would release fwse or do devlogs
 
 - [fwse at gamejolt](https://gamejolt.com/games/fwse/976580)
+- [fwse at github](https://github.com/programminglaboratorys/fnaf-world-save-editor)
 
 
 # TODO
