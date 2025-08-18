@@ -13,10 +13,15 @@ from threading import Thread
 import pygame
 from game_state.errors import ExitGame, ExitState
 
+# load states
 from editor import Editor
+from test import Test
+
+#
+
 from graphics import draw_background, render_text_with_outline
 from states import MainEditorStateManager, State
-from utils.constants import EDITOR_DEBUG, FPS, WINDOW_SIZE, global_event_handler
+from utils.constants import PLAYGROUND_MODE, EDITOR_DEBUG, FPS, WINDOW_SIZE, global_event_handler
 from utils.helper import Counter
 from utils.resources import Textures
 
@@ -78,7 +83,7 @@ class MainMenu(State):
             )
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
-    def load_and_jump(self):
+    def load_and_jump(self, state="Editor"):
 
         # TODO: load in a thread and
         # create a loading frame, spinning fredbear animation?
@@ -91,10 +96,12 @@ class MainMenu(State):
                 f"fnafwr{self.globals.slot+1}",
             )
         )
-        self.jump_to_state("Editor")
+        self.jump_to_state(state)
 
     def run(self) -> None:
         self.update = True
+        if PLAYGROUND_MODE:
+            self.load_and_jump("Test")
         if EDITOR_DEBUG:
             self.load_and_jump()
         while True:
@@ -132,7 +139,7 @@ def main() -> None:
     # Create a basic 500x700 pixel window
 
     state_manager = MainEditorStateManager(screen)
-    state_manager.load_states(MainMenu, Editor)
+    state_manager.load_states(MainMenu, Editor, Test)
 
     state_manager.change_state("MainMenu")
     # Updates the current state to the desired state (screen) we want.
