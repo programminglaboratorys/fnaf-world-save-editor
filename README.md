@@ -11,19 +11,12 @@ be aware!
 don't report them to game devs because the player is never meant to edit the save files! also don't report them to me, in game side affects are not related to the file editor nor they're my problem. thanks.
 
 
-
-### TODO
-
-- add a proper readme
-- other
-
 ### SITES
 
 places where I would release fwse or do devlogs
 
 - [fwse at gamejolt](https://gamejolt.com/games/fwse/976580)
 - [fwse at github](https://github.com/programminglaboratorys/fnaf-world-save-editor)
-
 
 
 # TODO

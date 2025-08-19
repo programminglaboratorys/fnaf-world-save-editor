@@ -13,7 +13,7 @@ ColorLike = Union[pygame.Color, tuple[int, int, int], tuple[int, int, int, int],
 
 FPS = 60
 EDITOR_DEBUG = True
-PLAYGROUND_MODE = True
+PLAYGROUND_MODE = False
 # 850x530
 WINDOW_SIZE = (500, 530)
 MAX_WINDOW_SIZE = (850, 530)

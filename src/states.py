@@ -23,7 +23,7 @@ class MainEditorStateManager(StateManager):
     """
 
     globals: AttrDict = AttrDict(slot=0)
-    save = ConfigParser()
+    save = ConfigParser(strict=False)
 
     def __init__(self, window):
         super().__init__(window)
