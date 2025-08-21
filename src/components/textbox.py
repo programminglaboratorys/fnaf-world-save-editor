@@ -153,7 +153,7 @@ class TextBox:
         else:
             self.render_area = self.rendered.get_rect(topleft=(0, 0))
         # TODO: change to use dalte time (check animate.py)
-        if pg.time.get_ticks() - self.blink_timer > 200:
+        if pg.time.get_ticks() - self.blink_timer > 300:
             self.blink = not self.blink
             self.blink_timer = pg.time.get_ticks()
 
@@ -162,7 +162,7 @@ class TextBox:
         if not self.active and self.final is not None:  # an update is not necessary
             return
         # TODO: change to use dalte time (check animate.py)
-        if pg.time.get_ticks() - self.blink_timer > 200:
+        if pg.time.get_ticks() - self.blink_timer > 300:
             self.blink = not self.blink
             self.blink_timer = pg.time.get_ticks()
         new = "".join(self.buffer)

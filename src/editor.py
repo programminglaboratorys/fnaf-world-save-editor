@@ -6,8 +6,11 @@ import os
 
 import pygame
 
+from typing import Optional
+
 from components.animate import AnimatatedObject, Animation
 from components.characterbox import CharacterBox
+from components.dynamic_grid import DynamicGrid, AbstractGridItem
 from graphics import draw_background
 from graphics.textures import load_image
 from states import State
@@ -15,8 +18,47 @@ from utils.constants import FPS, global_event_handler
 from utils.helper import add_vectors, quick_load, subtract_vectors
 from utils.resources import FontBank, Textures
 
+class AreaButton(AbstractGridItem):
+    def __init__(self, texture_path, id: int = -1):
+        super().__init__()
+        self.texture = load_image(texture_path, hotspot="center")
+        self.rect = self.texture.get_rect()
+        self.id = id
+
+    def get_rect(self):
+        return self.rect
+    
+    def get_surface(self):
+        return self.texture
+
+    def handle_event(self, event: pygame.Event):
+        if event.type == pygame.MOUSEBUTTONUP and self.rect.collidepoint(*event.pos):
+            print("area clicked id:",self.id)
+
+class AreaButtonsGrid(DynamicGrid):
+    def __init__(self, items=None, **keyargs):
+        super().__init__(items, (1, 99), (1, 99), padding=(0, 10), **keyargs)
+    
+    def draw(self, screen):
+        for item in self.items[:-1]: # remove the last item
+            item.draw(screen)
 
 def load_location_buttons():
+    """load the location buttons"""
+    #locations_buttons = AnimatatedObject()
+    locations_buttons = AreaButtonsGrid(position=(5, 30), margin=(5, 0))
+    for ind, file in enumerate(glob.iglob("textures/locations/*.png")):
+        locations_buttons.items.append(AreaButton(file, ind+1))
+    """
+        texture = load_image(file, hotspot="center")
+        name = os.path.basename(file).split(".")[0]
+        animation = Animation(frames=[texture], speed=0, repeat=-1)
+        locations_buttons.add_animation(name, animation)
+    locations_buttons.change_animation(0)
+    """
+    return locations_buttons
+
+def load_location_buttons_():
     """load the location buttons"""
     locations_buttons = AnimatatedObject()
     for file in glob.iglob("textures/locations/*.png"):
@@ -26,7 +68,6 @@ def load_location_buttons():
         locations_buttons.add_animation(name, animation)
     locations_buttons.change_animation(0)
     return locations_buttons
-
 
 class Editor(State):
     """the main editor interface for fnaf world"""
@@ -65,9 +106,13 @@ class Editor(State):
         self.characterbox = CharacterBox()
         # TODO: load in a separate thread
         self.load_action_buttons()
+        self.locations_buttons.refresh(pygame.display.get_window_size()[0])
 
     def render_locations_buttons(self, deltatime: int):
         """render locations buttons"""
+        self.locations_buttons.draw(self.window)
+        return
+        self.locations_buttons.draw(self.window, deltatime, (30, 50))
         # TODO: simplified, this is hard to read
         # TODO: actually check if areas are opened or not
         self.locations_buttons.change_animation(0)
@@ -117,9 +162,10 @@ class Editor(State):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKQUOTE:
                         self.go_back = True
-                    if event.key == pygame.VIDEORESIZE:
-                        # TODO: based on window size change, set self.sub_interface
-                        pass
+                if event.type == pygame.VIDEORESIZE:
+                    # TODO: based on window size change, set self.sub_interface
+                    pass
+                self.locations_buttons.handle_event(event)
                 self.characterbox.process_event(event)
                 global_event_handler(self, event)
             if self.go_back:
