@@ -45,28 +45,9 @@ class AreaButtonsGrid(DynamicGrid):
 
 def load_location_buttons():
     """load the location buttons"""
-    #locations_buttons = AnimatatedObject()
     locations_buttons = AreaButtonsGrid(position=(5, 30), margin=(5, 0))
     for ind, file in enumerate(glob.iglob("textures/locations/*.png")):
         locations_buttons.items.append(AreaButton(file, ind+1))
-    """
-        texture = load_image(file, hotspot="center")
-        name = os.path.basename(file).split(".")[0]
-        animation = Animation(frames=[texture], speed=0, repeat=-1)
-        locations_buttons.add_animation(name, animation)
-    locations_buttons.change_animation(0)
-    """
-    return locations_buttons
-
-def load_location_buttons_():
-    """load the location buttons"""
-    locations_buttons = AnimatatedObject()
-    for file in glob.iglob("textures/locations/*.png"):
-        texture = load_image(file, hotspot="center")
-        name = os.path.basename(file).split(".")[0]
-        animation = Animation(frames=[texture], speed=0, repeat=-1)
-        locations_buttons.add_animation(name, animation)
-    locations_buttons.change_animation(0)
     return locations_buttons
 
 class Editor(State):
