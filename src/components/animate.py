@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from typing import overload
 
 import pygame
+import math
 
 from graphics.textures import TVector2, get_surface_hotspot
 
@@ -37,11 +38,11 @@ class Animation:
         """Whether the animation is static."""
         return self.speed == 0 or len(self.frames) == 1
 
-    def animate(self):
+    def animate(self, frames: int = 1):
         """Go to the next frame"""
         if self.static:
             return
-        self.current_frame = (self.current_frame + 1) % len(self.frames)
+        self.current_frame = (self.current_frame + frames) % len(self.frames)
 
     def set_current_frame(self, frame: int):
         """Set the current frame"""
@@ -121,10 +122,9 @@ class AnimatatedObject:
             animation.draw(window, position)
             return
         self.elapsed += deltatime
-        frames_to_skip = self.elapsed // animation.speed
+        frames_to_skip = math.floor(self.elapsed / animation.speed)
         self.elapsed -= frames_to_skip * animation.speed
-        for _ in range(frames_to_skip):
-            animation.animate()
+        animation.animate(frames_to_skip)
         animation.draw(window, position)
 
 
