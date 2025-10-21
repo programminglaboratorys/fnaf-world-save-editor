@@ -33,13 +33,16 @@ class DynamicGrid:
         self.margin_x, self.margin_y = margin
         self.grid_x, self.grid_y = position
         self.static = static
+        #
+        self.last_col = 0
+        self.last_row = 0
         self.update_item_size()
         if pre_setup:
             self.recalculate_grid(window_width)
 
     @staticmethod
     def roundit(value: float):
-        if value - int(value) >= 0.3:
+        if value - int(value) >= 0.7:
             return int(value) + 1
         return round(value)
 
@@ -64,15 +67,15 @@ class DynamicGrid:
         available_width = window_width - (2 * self.margin_x)
         total_item_width = self.item_width + self.padding_x
         self.cols = min(self.max_cols, max(self.min_cols, self.roundit(max(1, available_width) / total_item_width)))
-        
+
         for i, item in enumerate(self.items):
             if i >= self.max_cols * self.max_rows:
                 break  # stop if we exceed the maximum number of items allowed in the grid
-            
+
             item_rect = item.get_rect()
-            col = i % self.cols
-            row = i // self.cols
-            
+            col = self.last_col = i % self.cols
+            row = self.last_row = i // self.cols
+
             item_rect.x = self.grid_x + self.margin_x + col * (self.item_width + self.padding_x)
             item_rect.y = self.grid_y + self.margin_y + row * (self.item_height + self.padding_y)
 
