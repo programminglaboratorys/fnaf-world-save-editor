@@ -91,11 +91,12 @@ class Editor(State):
         #
         self.action_buttons.change_animation(0)
 
-    def setup(self):
+    def on_setup(self):
         self.characterbox = CharacterBox()
         # TODO: load in a separate thread
         self.load_action_buttons()
         self.locations_buttons.refresh(pygame.display.get_window_size()[0])
+        self.go_back = False
 
     def render_locations_buttons(self, deltatime: int):
         """render locations buttons"""
@@ -138,27 +139,18 @@ class Editor(State):
             + pygame.Vector2(0, characterbox.height)
             + (-1, 10),
         )
-
-
-    def run(self) -> None:
-        """Editor mainloop"""
-        self.go_back = False
-        # font = pygame.font.Font(None, 30)
-        while True:
-            deltatime = self.clock.tick(
-                FPS
-            )  # make use of delta time for blinkers and animations
-
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKQUOTE:
-                        self.go_back = True
-                if event.type == pygame.VIDEORESIZE:
-                    # TODO: based on window size change, set self.sub_interface
-                    pass
-                self.locations_buttons.handle_event(event)
-                self.characterbox.process_event(event)
-                global_event_handler(self, event)
+    def process_event(self, event: pygame.event.Event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKQUOTE:
+                self.go_back = True
+        if event.type == pygame.VIDEORESIZE:
+            # TODO: based on window size change, set self.sub_interface
+            pass
+        self.locations_buttons.handle_event(event)
+        self.characterbox.process_event(event)
+        return super().process_event(event)
+    def process_update(self, deltatime):  
+            deltatime # make use of delta time for blinkers and animations
             if self.go_back:
                 self.jump_to_state("MainMenu")
             self.characterbox.update()

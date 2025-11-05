@@ -31,7 +31,7 @@ def global_event_handler(state: State, event: pygame.event.Event):
         or event.type == pygame.KEYDOWN
         and event.key == pygame.K_q
     ):
-        raise ExitGame()
+        state.manager.is_running = False
     elif event.type == pygame.VIDEORESIZE:
         width, height = event.size
         width = min(max(width, MIN_WINDOW_SIZE[0]), MAX_WINDOW_SIZE[0])

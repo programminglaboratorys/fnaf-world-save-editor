@@ -141,7 +141,7 @@ def main() -> None:
     # Create a basic 500x700 pixel window
 
     state_manager = MainEditorStateManager(screen)
-    state_manager.load_states(MainMenu, Editor, Test)
+    state_manager.load_states(MainMenu, Editor)
     lcd_font_size = 20
 
     state_manager.change_state("MainMenu")

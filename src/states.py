@@ -55,4 +55,4 @@ class State(orgState):
     def jump_to_state(self, name: str):
         """jump to a state"""
         self.manager.change_state(name)  # Change our state to the desired state
-        self.manager.update_state()  # Updates / resets the state.
+        #self.manager.update_state()  # Updates / resets the state.
