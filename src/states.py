@@ -15,6 +15,7 @@ from game_state import StateManager
 
 from utils.helper import AttrDict
 
+import os
 
 class MainEditorStateManager(StateManager):
     """
@@ -28,6 +29,20 @@ class MainEditorStateManager(StateManager):
     def __init__(self, window):
         super().__init__(window)
         self.window = window
+
+    def load_and_jump(self, state="Editor"):
+        # TODO: load in a thread and
+        # create a loading frame, spinning fredbear animation?
+        # sad animation when failure to load save file
+        self.save.read(
+            os.path.join(
+                os.getenv("APPDATA"),
+                "MMFApplications",
+                f"fnafwr{self.globals.slot+1}",
+            )
+        )
+        #print(list(self.save["fnafw"].keys()))
+        self.change_state(state)
 
 
 class State(orgState):
@@ -55,4 +70,4 @@ class State(orgState):
     def jump_to_state(self, name: str):
         """jump to a state"""
         self.manager.change_state(name)  # Change our state to the desired state
-        #self.manager.update_state()  # Updates / resets the state.
+    

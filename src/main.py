@@ -82,29 +82,8 @@ class MainMenu(State):
             )
             button.draw(window, selected=is_selected, text=f"SLOT {index+1}")
 
-    def load_and_jump(self, state="Editor"):
-
-        # TODO: load in a thread and
-        # create a loading frame, spinning fredbear animation?
-        # sad animation when failure to load save file
-
-        self.save.read(
-            os.path.join(
-                os.getenv("APPDATA"),
-                "MMFApplications",
-                f"fnafwr{self.globals.slot+1}",
-            )
-        )
-        #print(list(self.save["fnafw"].keys()))
-        self.jump_to_state(state)
-
     def on_setup(self):
         self.update = True
-        #if PLAYGROUND_MODE:
-        #    self.load_and_jump("Test")
-        #if EDITOR_DEBUG:
-        #    self.load_and_jump()
-        
         return super().on_setup()
     def process_event(self, event: pygame.event.Event):
             if event.type == pygame.KEYDOWN:
@@ -123,13 +102,14 @@ class MainMenu(State):
             if event.type == pygame.VIDEORESIZE:
                 self.update = True
 
-    def process_update(self, deltatime) -> None:
+    def process_update(self, deltatime, _) -> None:
         if not self.update:  # avoid using cpu/gpu power when not needed
             return
         draw_background(self.window, Textures.background)
         self.draw_buttons()
         self.update = False
         pygame.display.flip()
+
 
 
 
@@ -142,9 +122,14 @@ def main() -> None:
 
     state_manager = MainEditorStateManager(screen)
     state_manager.load_states(MainMenu, Editor)
-    lcd_font_size = 20
 
-    state_manager.change_state("MainMenu")
+    if EDITOR_DEBUG:
+        state_manager.load_and_jump("Editor")
+    elif PLAYGROUND_MODE:
+        state_manager.load_and_jump("Test")
+    else:
+        state_manager.change_state("MainMenu")
+        
     # Updates the current state to the desired state (screen) we want.
     clock = pygame.Clock()
     while state_manager.is_running:
@@ -154,7 +139,7 @@ def main() -> None:
              state_manager.current_state.process_event(event)
              global_event_handler(state_manager.current_state, event)
 
-       state_manager.current_state.process_update(dt)
+       state_manager.current_state.process_update(dt, clock)
 
     print("Game has exited successfully")
 
