@@ -139,6 +139,7 @@ class Editor(State):
             + pygame.Vector2(0, characterbox.height)
             + (-1, 10),
         )
+
     def process_event(self, event: pygame.event.Event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_BACKQUOTE:
@@ -149,8 +150,8 @@ class Editor(State):
         self.locations_buttons.handle_event(event)
         self.characterbox.process_event(event)
         return super().process_event(event)
-    def process_update(self, deltatime):  
-            deltatime # make use of delta time for blinkers and animations
+
+    def process_update(self, deltatime, clock): # make use of delta time for blinkers and animations
             if self.go_back:
                 self.jump_to_state("MainMenu")
             self.characterbox.update()
@@ -174,5 +175,14 @@ class Editor(State):
                 subtract_vectors(self.window.get_rect().bottomleft, (0, lcd_font_size)),
             )
 
+            text = FontBank.lcd_font.render(
+                f"fps: {int(clock.get_fps())}", 1, (255, 255, 255)
+            )
+            self.window.blit(
+                text,
+                subtract_vectors(
+                    self.window.get_rect().bottomleft, (0, lcd_font_size * 2)
+                ),
+            )
 
             pygame.display.flip()
