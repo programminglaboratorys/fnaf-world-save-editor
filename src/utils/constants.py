@@ -18,7 +18,7 @@ PLAYGROUND_MODE = True
 WINDOW_SIZE = (500, 530)
 MAX_WINDOW_SIZE = (850, 530)
 MIN_WINDOW_SIZE = (500, 530)
-
+DEFAULT_EDITOR = "notepad"
 
 def global_event_handler(state: State, event: pygame.event.Event):
     """
