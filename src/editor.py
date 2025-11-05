@@ -72,15 +72,25 @@ class Editor(State):
         if not self.action_buttons.empty:
             return
         done_data = quick_load("done button", "textures/done button/done button.json")
-        if done_data is None:
-            print("no json file found for done button")
+        raw_data = quick_load("raw button", "textures/raw button/raw button.json")
+        if None in [raw_data, done_data]:
+            print("no json file found for some action button! (Please Debug!)")
             return
         done_frames = [
             load_image(os.path.join("textures/done button/", frame), hotspot="topleft")
             for frame in json.loads(done_data)["frames"]
         ]
+        raw_frames = [
+            load_image(os.path.join("textures/raw button/", frame), hotspot="topleft")
+            for frame in json.loads(raw_data)["frames"]
+        ]
+
         animation = Animation(frames=done_frames, speed=50, repeat=-1)
         self.action_buttons.add_animation("done button", animation)
+        #
+        animation = Animation(frames=raw_frames, speed=50, repeat=-1)
+        self.action_buttons.add_animation("raw button", animation)
+        #
         self.action_buttons.change_animation(0)
 
     def setup(self):
@@ -120,6 +130,7 @@ class Editor(State):
 
     def render_action_buttons(self, deltatime):
         """render action buttons"""
+        # TODO: use a grid
         # win_react = self.window.get_rect()
         characterbox = self.characterbox
         self.action_buttons.draw(
@@ -129,6 +140,7 @@ class Editor(State):
             + pygame.Vector2(0, characterbox.height)
             + (-1, 10),
         )
+
 
     def run(self) -> None:
         """Editor mainloop"""
