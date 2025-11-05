@@ -11,7 +11,6 @@ os.sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from threading import Thread
 
 import pygame
-from game_state.errors import ExitGame, ExitState
 
 # load states
 from editor import Editor
@@ -23,7 +22,7 @@ from graphics import draw_background, render_text_with_outline
 from states import MainEditorStateManager, State
 from utils.constants import PLAYGROUND_MODE, EDITOR_DEBUG, FPS, WINDOW_SIZE, global_event_handler
 from utils.helper import Counter
-from utils.resources import Textures
+from utils.resources import Textures, FontBank
 
 
 class SlotButton:
@@ -96,39 +95,42 @@ class MainMenu(State):
                 f"fnafwr{self.globals.slot+1}",
             )
         )
+        #print(list(self.save["fnafw"].keys()))
         self.jump_to_state(state)
 
-    def run(self) -> None:
+    def on_setup(self):
         self.update = True
-        if PLAYGROUND_MODE:
-            self.load_and_jump("Test")
-        if EDITOR_DEBUG:
-            self.load_and_jump()
-        while True:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    match (event.key):
-                        case pygame.K_DOWN:
-                            self.current_selection += 1
-                        case pygame.K_UP:
-                            self.current_selection -= 1
-                        case pygame.K_RETURN:
-                            self.globals.slot = int(self.current_selection)
-                            print(
-                                "enter been pressed for button", self.current_selection
-                            )
-                            self.load_and_jump()
-                    self.update = True
-                if event.type == pygame.VIDEORESIZE:
-                    self.update = True
-                global_event_handler(self, event)
-            if not self.update:  # avoid using cpu/gpu power when not needed
-                continue
-            draw_background(self.window, Textures.background)
-            self.draw_buttons()
-            pygame.display.flip()
-            self.clock.tick(FPS)
-            self.update = False
+        #if PLAYGROUND_MODE:
+        #    self.load_and_jump("Test")
+        #if EDITOR_DEBUG:
+        #    self.load_and_jump()
+        
+        return super().on_setup()
+    def process_event(self, event: pygame.event.Event):
+            if event.type == pygame.KEYDOWN:
+                match (event.key):
+                    case pygame.K_DOWN:
+                        self.current_selection += 1
+                    case pygame.K_UP:
+                        self.current_selection -= 1
+                    case pygame.K_RETURN:
+                        self.globals.slot = int(self.current_selection)
+                        print(
+                            "enter been pressed for button", self.current_selection
+                        )
+                        self.load_and_jump()
+                self.update = True
+            if event.type == pygame.VIDEORESIZE:
+                self.update = True
+
+    def process_update(self, deltatime) -> None:
+        if not self.update:  # avoid using cpu/gpu power when not needed
+            return
+        draw_background(self.window, Textures.background)
+        self.draw_buttons()
+        self.update = False
+        pygame.display.flip()
+
 
 
 def main() -> None:
@@ -140,29 +142,25 @@ def main() -> None:
 
     state_manager = MainEditorStateManager(screen)
     state_manager.load_states(MainMenu, Editor, Test)
+    lcd_font_size = 20
 
     state_manager.change_state("MainMenu")
     # Updates the current state to the desired state (screen) we want.
+    clock = pygame.Clock()
+    while state_manager.is_running:
+       dt = clock.tick(FPS)
 
-    while True:
-        try:
-            state_manager.run_state()
-            # This is the entry point of our screen manager.
-            # This should only be called once at start up.
+       for event in pygame.event.get():
+             state_manager.current_state.process_event(event)
+             global_event_handler(state_manager.current_state, event)
 
-        except ExitState as change:
-            # Stuff you can do right after a state (screen) has been changed
-            # i.e. Save player data, pause / resume / change music, etc...
+       state_manager.current_state.process_update(dt)
 
-            last_state = change.last_state
-            current_state = state_manager.get_current_state()
-            print(f"State has changed from: {last_state} to {current_state}")
+    print("Game has exited successfully")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except ExitGame:
-        print("Game has exited successfully")
     except KeyboardInterrupt:
         print("Game has been terminated")

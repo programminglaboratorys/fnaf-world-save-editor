@@ -5,8 +5,6 @@ Constants used globally in the editor.
 from typing import Union
 
 import pygame
-from game_state.errors import ExitGame
-
 from states import State
 
 ColorLike = Union[pygame.Color, tuple[int, int, int], tuple[int, int, int, int], int]

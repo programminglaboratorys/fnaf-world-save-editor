@@ -6,8 +6,6 @@ import os
 
 import pygame
 
-from typing import Optional
-
 from components.animate import AnimatatedObject, Animation
 from components.characterbox import CharacterBox
 from components.dynamic_grid import DynamicGrid, AbstractGridItem
@@ -184,13 +182,5 @@ class Editor(State):
                 subtract_vectors(self.window.get_rect().bottomleft, (0, lcd_font_size)),
             )
 
-            text = FontBank.lcd_font.render(
-                f"fps: {int(self.clock.get_fps())}", 1, (255, 255, 255)
-            )
-            self.window.blit(
-                text,
-                subtract_vectors(
-                    self.window.get_rect().bottomleft, (0, lcd_font_size * 2)
-                ),
-            )
+
             pygame.display.flip()
